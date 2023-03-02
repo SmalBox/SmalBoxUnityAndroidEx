@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import java.io.File;
@@ -94,6 +95,26 @@ public class OpenPath {
         {
             Toast.makeText(activity, "打开"+ packageName +"失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 检查应用是否安装
+     * @param packageName 完整包名
+     * @return 返回是否安装
+     */
+    public boolean CheckAppInstalled(String packageName)
+    {
+        if (TextUtils.isEmpty(packageName))
+        {
+            return false;
+        }
+        try {
+            activity.getPackageManager().getPackageInfo(packageName, 0);
+        }catch (Exception e)
+        {
+            return false;
+        }
+        return true;
     }
 
 
