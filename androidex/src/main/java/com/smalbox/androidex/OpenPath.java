@@ -42,6 +42,26 @@ public class OpenPath {
     }
 
     /**
+     * 分享路径
+     * @param path 要分享的路径
+     */
+    public void SharePath(String path)
+    {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath() + path);
+        intent.setDataAndType(uri, "file/*");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        try {
+            Toast.makeText(activity, "分享路径:" + path, Toast.LENGTH_SHORT).show();
+            activity.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(activity, "分享异常：" + e, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
      * 启动文件管理器打开指定页面
      * @param packageName 文件管理器包名
      * @param activityPath 文件管理器页面活动名
