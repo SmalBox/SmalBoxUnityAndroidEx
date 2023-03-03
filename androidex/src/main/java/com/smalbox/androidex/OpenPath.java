@@ -47,7 +47,8 @@ public class OpenPath {
      */
     public void SharePath(String path)
     {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        //Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent();
         Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath() + path);
         intent.setDataAndType(uri, "file/*");
         intent.addCategory(Intent.CATEGORY_DEFAULT);
