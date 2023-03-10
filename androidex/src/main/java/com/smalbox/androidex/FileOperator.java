@@ -20,8 +20,14 @@ public class FileOperator {
         return instance;
     }
 
-    public void WriteAllByte(String path, byte[] content)
+    public void WriteAllByte(String dirPath, String fileName, String mimeType, byte[] content)
     {
+        MediaStoreUtils.SaveImageToMediaStore(
+                activity,
+                dirPath,
+                fileName,
+                mimeType,
+                content);
     }
 
     public void ReadAllByte(String path)
