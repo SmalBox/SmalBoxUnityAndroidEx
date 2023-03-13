@@ -72,6 +72,13 @@ public class MediaStoreUtils {
         }
     }
 
+    public enum MediaStoreImage
+    {
+        DCIM,
+        Pictures,
+        Documents,
+        Downloads
+    };
     /**
      * Media方式存储图片
      * @param activity 活动的 Activity
@@ -82,24 +89,40 @@ public class MediaStoreUtils {
      */
     public static void SaveImageToMediaStore(
             Activity activity,
+            MediaStoreImage type,
             String dirPath,
             String fileName,
             String mimeType,
-            byte[] imageData)
+            byte[] imageData,
+            boolean debugLog)
     {
-        Toast.makeText(activity, "1.开始文件存储", Toast.LENGTH_SHORT).show();
+        if (debugLog) Toast.makeText(activity, "1.开始文件存储", Toast.LENGTH_SHORT).show();
 
         ContentResolver resolver = activity.getContentResolver();
         ContentValues values = new ContentValues();
 
 // Set the file directory path (change this to the desired directory path)
-        dirPath = Environment.DIRECTORY_DCIM + dirPath;
+        String rootPath = Environment.DIRECTORY_DCIM;
+        switch (type)
+        {
+            case Pictures:
+                rootPath = Environment.DIRECTORY_PICTURES;
+                break;
+            case Documents:
+                rootPath = Environment.DIRECTORY_DOCUMENTS;
+                break;
+            case Downloads:
+                rootPath = Environment.DIRECTORY_DOWNLOADS;
+                break;
+        }
+        dirPath = rootPath + dirPath;
 
 // Create the directory if it does not exist
         File dir = new File(Environment.getExternalStoragePublicDirectory(dirPath).getPath());
         if (!dir.exists()) {
             dir.mkdirs();
-            Toast.makeText(activity, "2.路径不存在-创建路径", Toast.LENGTH_SHORT).show();
+            if (debugLog) Toast.makeText(activity, "2.路径不存在-创建路径", Toast.LENGTH_SHORT)
+                    .show();
         }
 
 // Set the file details
@@ -109,7 +132,7 @@ public class MediaStoreUtils {
 
 // Insert the image into MediaStore database
         Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        Toast.makeText(activity, "3.插入数据", Toast.LENGTH_SHORT).show();
+        if (debugLog) Toast.makeText(activity, "3.插入数据", Toast.LENGTH_SHORT).show();
 
 // Wait for the image to be fully prepared, then write the image data to the output stream
         try {
@@ -119,11 +142,11 @@ public class MediaStoreUtils {
                 //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.my_photo);
                 //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.write(imageData);
-                Toast.makeText(activity, "4.写入数据", Toast.LENGTH_SHORT).show();
+                if (debugLog) Toast.makeText(activity, "4.写入数据", Toast.LENGTH_SHORT).show();
 
                 outputStream.flush();
                 outputStream.close();
-                Toast.makeText(activity, "5.完成", Toast.LENGTH_SHORT).show();
+                if (debugLog) Toast.makeText(activity, "5.完成", Toast.LENGTH_SHORT).show();
             }
         } catch (IOException e) {
             e.printStackTrace();
